@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>STARGLOW NOW — 最新情報まとめ</title>
+<meta name="description" content="STARGLOW（BMSG）の最新情報を信頼度つきで集約。公式・ニュース・YouTubeをワンタッチでチェック。" />
+<meta name="theme-color" content="#070b16" />
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Crect width='180' height='180' fill='%23070b16'/%3E%3Cpolygon points='90,28 104,76 152,90 104,104 90,152 76,104 28,90 76,76' fill='%23ffe6b4'/%3E%3C/svg%3E" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="STARGLOW NOW" />
+<style>
+:root{
+  --bg:#070b16;--bg-2:#0c1226;--card:rgba(20,28,52,.72);--card-border:rgba(120,150,240,.16);
+  --text:#eaf0ff;--text-dim:#97a3c4;--glow-cyan:#54e6ff;
+  --accent-grad:linear-gradient(120deg,#ffd57a 0%,#ff9ad1 38%,#8a7bff 70%,#54e6ff 100%);
+  --official:#ffd57a;--major:#7fd4ff;--known:#a9b4d6;--unknown:#ff8a8a;--radius:18px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{margin:0;padding:0;}
+body{font-family:-apple-system,"Hiragino Sans","Noto Sans JP",system-ui,sans-serif;color:var(--text);
+  background:radial-gradient(1200px 700px at 70% -10%,#14224d 0%,var(--bg-2) 45%,var(--bg) 100%);
+  min-height:100vh;padding-bottom:env(safe-area-inset-bottom);overflow-x:hidden;}
+.starfield{position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background-image:radial-gradient(1.4px 1.4px at 20% 30%,rgba(255,255,255,.9),transparent),
+  radial-gradient(1.2px 1.2px at 75% 20%,rgba(255,255,255,.7),transparent),
+  radial-gradient(1.6px 1.6px at 50% 60%,rgba(255,255,255,.85),transparent),
+  radial-gradient(1px 1px at 85% 70%,rgba(255,255,255,.6),transparent),
+  radial-gradient(1.3px 1.3px at 12% 80%,rgba(255,255,255,.7),transparent),
+  radial-gradient(1.1px 1.1px at 60% 85%,rgba(255,255,255,.55),transparent);opacity:.55;
+  animation:twinkle 6s ease-in-out infinite alternate;}
+@keyframes twinkle{from{opacity:.35;}to{opacity:.7;}}
+.app-header{position:sticky;top:0;z-index:10;padding:calc(env(safe-area-inset-top) + 14px) 16px 10px;
+  background:linear-gradient(180deg,rgba(7,11,22,.92) 0%,rgba(7,11,22,.78) 70%,rgba(7,11,22,0) 100%);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);}
+.header-inner{display:flex;align-items:center;justify-content:space-between;}
+.brand{display:flex;align-items:center;gap:12px;}
+.brand-mark{width:34px;height:34px;border-radius:50%;background:var(--accent-grad);
+  box-shadow:0 0 18px rgba(138,123,255,.7),0 0 36px rgba(84,230,255,.35);position:relative;}
+.brand-mark::after{content:"★";position:absolute;inset:0;display:grid;place-items:center;font-size:16px;color:#0a0e1a;}
+.brand-text h1{margin:0;font-size:20px;letter-spacing:.14em;font-weight:800;}
+.brand-text h1 span{background:var(--accent-grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+.tagline{margin:1px 0 0;font-size:11px;color:var(--text-dim);letter-spacing:.1em;}
+.official-links{display:flex;gap:8px;margin-top:12px;overflow-x:auto;padding-bottom:2px;}
+.official-links a{flex:0 0 auto;font-size:12px;color:var(--text);text-decoration:none;padding:6px 12px;
+  border-radius:999px;border:1px solid var(--card-border);background:rgba(255,255,255,.04);}
+.official-links a:active{background:rgba(138,123,255,.2);}
+.filters{display:flex;gap:8px;margin-top:12px;overflow-x:auto;padding-bottom:4px;}
+.chip{flex:0 0 auto;font-size:13px;color:var(--text-dim);background:transparent;border:1px solid var(--card-border);
+  padding:7px 14px;border-radius:999px;cursor:pointer;white-space:nowrap;}
+.chip.is-active{color:#0a0e1a;font-weight:700;border-color:transparent;background:var(--accent-grad);box-shadow:0 0 16px rgba(138,123,255,.4);}
+.feed{padding:16px;display:flex;flex-direction:column;gap:14px;max-width:680px;margin:0 auto;}
+.card{display:block;text-decoration:none;color:inherit;background:var(--card);border:1px solid var(--card-border);
+  border-radius:var(--radius);padding:16px;position:relative;overflow:hidden;transition:transform .15s ease,border-color .15s ease;}
+.card:active{transform:scale(.985);border-color:rgba(138,123,255,.5);}
+.card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--known);}
+.card.tier-official::before{background:var(--official);box-shadow:0 0 14px var(--official);}
+.card.tier-major::before{background:var(--major);}
+.card.tier-unknown::before{background:var(--unknown);}
+.card-top{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;}
+.badge{font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;border:1px solid currentColor;}
+.badge.official{color:var(--official);}.badge.major{color:var(--major);}.badge.known{color:var(--known);}.badge.unknown{color:var(--unknown);}
+.type-tag{font-size:11px;color:var(--text-dim);}
+.card h2{margin:4px 0 6px;font-size:16px;line-height:1.45;font-weight:700;}
+.card p.summary{margin:0;font-size:13px;color:var(--text-dim);line-height:1.6;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.card-meta{display:flex;align-items:center;justify-content:space-between;margin-top:12px;}
+.source{font-size:12px;color:var(--text-dim);}
+.go{font-size:12px;color:var(--glow-cyan);font-weight:700;}
+.cred-bar{height:4px;border-radius:4px;background:rgba(255,255,255,.08);margin-top:10px;overflow:hidden;}
+.cred-fill{height:100%;border-radius:4px;background:var(--accent-grad);}
+.warn{margin-top:10px;font-size:12px;color:#ffd2d2;background:rgba(255,90,90,.1);border:1px solid rgba(255,90,90,.3);
+  padding:7px 10px;border-radius:10px;}
+.state{text-align:center;color:var(--text-dim);padding:40px 20px;}
+.app-footer{text-align:center;padding:16px 20px 32px;color:var(--text-dim);font-size:11px;max-width:680px;margin:0 auto;}
+.app-footer .disclaimer{margin-top:6px;opacity:.8;line-height:1.5;}
+</style>
+</head>
+<body>
+<div class="starfield" aria-hidden="true"></div>
+<header class="app-header">
+  <div class="header-inner">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <div class="brand-text"><h1>STARGLOW <span>NOW</span></h1><p class="tagline">最新情報まとめ</p></div>
+    </div>
+  </div>
+  <nav class="official-links" aria-label="公式リンク">
+    <a href="https://starglow.tokyo/" target="_blank" rel="noopener">公式サイト</a>
+    <a href="https://www.youtube.com/@starglow_bmsg" target="_blank" rel="noopener">YouTube</a>
+    <a href="https://www.instagram.com/starglow_bmsg/" target="_blank" rel="noopener">Instagram</a>
+    <a href="https://x.com/starglow_bmsg" target="_blank" rel="noopener">X</a>
+    <a href="https://ja.wikipedia.org/wiki/STARGLOW" target="_blank" rel="noopener">Wikipedia</a>
+  </nav>
+  <div class="filters" id="filters">
+    <button class="chip is-active" data-filter="all">すべて</button>
+    <button class="chip" data-filter="official">公式</button>
+    <button class="chip" data-filter="youtube">YouTube</button>
+    <button class="chip" data-filter="news">ニュース</button>
+    <button class="chip" data-filter="verified">確実な情報のみ</button>
+  </div>
+</header>
+<main id="feed" class="feed" aria-live="polite"></main>
+<footer class="app-footer">
+  <p>メンバー：RUI・TAIKI・KANON・GOICHI・ADAM ／ BMSG</p>
+  <p class="disclaimer">信頼度は情報源の種類から判定した目安です。最終確認は公式情報をご覧ください。</p>
+</footer>
+<script>
+const ITEMS = [
+  {type:"news",tier:"official",title:"3rdシングル「Drivin' My Life」7月22日リリース",
+   summary:"STARGLOWの3rdシングルが7/22に配信・発売。詳細は公式サイトをチェック。",
+   url:"https://starglow.tokyo/",source:"STARGLOW公式サイト",date:"2026-06-20",score:96},
+  {type:"news",tier:"official",title:"初のファンミツアー開幕！デビュー半年で初アリーナ追加公演をサプライズ発表",
+   summary:"BMSG発のSTARGLOWが初ファンミーティングツアーを開幕。サプライズでアリーナ追加公演も発表された。",
+   url:"https://avexnet.jp/news/1032526",source:"avex（公式リリース）",date:"2026-06-15",score:95},
+  {type:"news",tier:"official",title:"ライブBD/DVD「Wish upon a star」7月29日リリース決定",
+   summary:"デビューショーケースを収めた映像作品が7/29に発売予定。",
+   url:"https://starglow.tokyo/",source:"STARGLOW公式サイト",date:"2026-06-12",score:94},
+  {type:"youtube",tier:"official",title:"デビュー曲『Star Wish』を初披露 ― 約5000人が集結",
+   summary:"BMSG新人グループSTARGLOWがデビュー曲『Star Wish』を初パフォーマンス。全3曲を披露。",
+   url:"https://www.youtube.com/watch?v=Zj0upFfl-xg",source:"YouTube（公式映像）",date:"2026-01-21",score:95},
+  {type:"news",tier:"major",title:"STARGLOW 初のファンミツアーが開幕（メディア報道）",
+   summary:"デビュー半年での初アリーナ追加公演発表を各メディアが報道。",
+   url:"https://www.wws-channel.com/music2/618436.html",source:"WWSチャンネル",date:"2026-06-15",score:82},
+  {type:"news",tier:"major",title:"BMSG第3のボーイズグループ「STARGLOW」誕生、プレデビュー曲「Moonchaser」配信",
+   summary:"オーディション『THE LAST PIECE』から誕生。プレデビューシングルを配信、TV初出演も。",
+   url:"https://billboard-japan.com/d_news/detail/153847",source:"Billboard JAPAN",date:"2025-09-19",score:84},
+  {type:"news",tier:"official",title:"プレデビューシングル「Moonchaser」配信＆TBS『THE TIME,』でTV初生出演",
+   summary:"プレデビュー曲「Moonchaser」を初パフォーマンス。",
+   url:"https://avexnet.jp/news/1027865",source:"avex（公式リリース）",date:"2025-09-22",score:93},
+  {type:"news",tier:"known",title:"STARGLOW正式デビュー！ファンミーティング情報まとめ【2026年最新】",
+   summary:"デビューやファンミに関するファン向けまとめ記事。一次情報は公式で要確認。",
+   url:"https://ks-spice.net/sterglow/20042/",source:"ファンサイト",date:"2026-02-01",score:55,
+   warn:"個人サイトのまとめ情報です。日程などは公式で最終確認を。"}
+];
+
+const TYPE_LABEL={youtube:"🎬 YouTube",news:"📰 ニュース"};
+const TIER_LABEL={official:"公式",major:"大手メディア",known:"メディア",unknown:"未確認"};
+let filter="all";
+const feedEl=document.getElementById("feed");
+
+function timeAgo(d){const t=new Date(d).getTime();if(isNaN(t))return"";
+  const s=Math.floor((Date.now()-t)/1000);
+  if(s<86400)return"今日";if(s<2592000)return Math.floor(s/86400)+"日前";
+  if(s<31536000)return Math.floor(s/2592000)+"ヶ月前";return new Date(d).toLocaleDateString("ja-JP");}
+function esc(s){return(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function match(it){if(filter==="all")return true;if(filter==="official")return it.tier==="official";
+  if(filter==="youtube")return it.type==="youtube";if(filter==="news")return it.type==="news";
+  if(filter==="verified")return it.tier==="official"||it.tier==="major";return true;}
+function card(it){const warn=it.warn?`<div class="warn">⚠️ ${esc(it.warn)}</div>`:"";
+  return `<a class="card tier-${it.tier}" href="${esc(it.url)}" target="_blank" rel="noopener">
+    <div class="card-top"><span class="badge ${it.tier}">${TIER_LABEL[it.tier]}</span>
+    <span class="type-tag">${TYPE_LABEL[it.type]||"🔗 情報"}</span></div>
+    <h2>${esc(it.title)}</h2><p class="summary">${esc(it.summary)}</p>${warn}
+    <div class="cred-bar"><div class="cred-fill" style="width:${Math.max(6,it.score)}%"></div></div>
+    <div class="card-meta"><span class="source">${esc(it.source)} ・ ${timeAgo(it.date)}</span>
+    <span class="go">開く →</span></div></a>`;}
+function render(){const list=ITEMS.filter(match).sort((a,b)=>new Date(b.date)-new Date(a.date));
+  feedEl.innerHTML=list.length?list.map(card).join(""):'<div class="state">該当する情報がありません</div>';}
+document.getElementById("filters").addEventListener("click",e=>{const b=e.target.closest(".chip");if(!b)return;
+  document.querySelectorAll(".chip").forEach(c=>c.classList.remove("is-active"));
+  b.classList.add("is-active");filter=b.dataset.filter;render();});
+render();
+</script>
+</body>
+</html>
