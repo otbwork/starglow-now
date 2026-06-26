@@ -70,29 +70,6 @@ function cardHTML(item) {
     </a>`;
 }
 
-// トップのヒーロー画像を、候補からランダムに1枚選んで表示（更新のたびに変わる）
-// 画像をタップするとその動画ページへ飛ぶ。
-function setHero(images) {
-  const heroEl = document.getElementById('hero');
-  if (!heroEl) return;
-  // 旧形式（文字列の配列）にも対応
-  const list = (images || [])
-    .map((h) => (typeof h === 'string' ? { image: h, url: '' } : h))
-    .filter((h) => h && h.image);
-  if (!list.length) {
-    heroEl.classList.remove('is-loaded');
-    heroEl.removeAttribute('href');
-    return;
-  }
-  const pick = list[Math.floor(Math.random() * list.length)];
-  // 下側を暗くフェードして本文へ自然につなぐ
-  heroEl.style.backgroundImage =
-    'linear-gradient(180deg, rgba(7,11,22,0) 45%, rgba(7,11,22,.92) 100%), url("' + pick.image + '")';
-  if (pick.url) heroEl.setAttribute('href', pick.url);
-  else heroEl.removeAttribute('href');
-  heroEl.classList.add('is-loaded');
-}
-
 function render() {
   const items = allItems.filter(matchesFilter);
   if (!items.length) {
@@ -110,8 +87,6 @@ async function load() {
     allItems = data.items || [];
     // 新しい順 → 信頼度順で安定化
     allItems.sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt));
-
-    setHero(data.heroImages || []);
 
     const note = data.sample
       ? '<div class="sample-note">※ サンプル表示中です。GitHub Actions が初回実行されると実データに切り替わります。</div>'
