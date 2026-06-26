@@ -185,4 +185,6 @@ body {
 }
 
 .app-footer { text-align: center; padding: 16px 20px 32px; color: var(--text-dim); font-size: 11px; max-width: 680px; margin: 0 auto; }
+/* フッターの透過ロゴ（ヒーローの約半分サイズ） */
+.footer-logo { width: 50%; max-width: 320px; height: auto; display: block; margin: 4px auto 16px; opacity: .9; }
 .app-footer .disclaimer { margin-top: 6px; opacity: .8; line-height: 1.5; }
