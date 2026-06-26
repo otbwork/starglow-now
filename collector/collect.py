@@ -418,12 +418,14 @@ def build():
     items.sort(key=lambda x: x["publishedAt"], reverse=True)
     items = items[:MAX_ITEMS]
 
-    # トップのヒーロー用に YouTube 公式サムネを最大12枚集める（重複除去）
+    # トップのヒーロー用に YouTube 公式サムネを最大12枚集める（画像と動画URLをペアで）
     hero_images = []
+    seen_hero = set()
     for it in items:
         img = it.pop("image", "")
-        if it.get("type") == "youtube" and img and img not in hero_images:
-            hero_images.append(img)
+        if it.get("type") == "youtube" and img and img not in seen_hero:
+            seen_hero.add(img)
+            hero_images.append({"image": img, "url": it.get("url", "")})
     hero_images = hero_images[:12]
 
     # 1件も取れなかったときは既存の feed.json を上書きしない（ネットワーク不調などへの保険）

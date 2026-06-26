@@ -1,7 +1,7 @@
 // STARGLOW NOW — Service Worker
 // オンライン時は常に最新を取りに行き、オフライン時だけキャッシュを使う方針。
 // （以前は cache-first で、更新してもアプリ側に反映されにくかったため改良）
-const CACHE = 'starglow-now-v6';
+const CACHE = 'starglow-now-v7';
 const SHELL = [
   './',
   './index.html',
