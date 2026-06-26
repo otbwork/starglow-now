@@ -209,6 +209,8 @@ def parse_rss(xml_text: str) -> list:
         for l in entry.findall(f"{ATOM}link"):
             if l.get("rel", "alternate") == "alternate" or not link:
                 link = l.get("href", "")
+        thumb_el = entry.find(f"{MEDIA}group/{MEDIA}thumbnail")
+        thumbnail = thumb_el.get("url", "") if thumb_el is not None else ""
         out.append({
             "title": _text(entry.find(f"{ATOM}title")),
             "link": link,
@@ -217,6 +219,7 @@ def parse_rss(xml_text: str) -> list:
             "published": _text(entry.find(f"{ATOM}published"))
                          or _text(entry.find(f"{ATOM}updated")),
             "source": _text(entry.find(f"{ATOM}author/{ATOM}name")),
+            "thumbnail": thumbnail,
         })
     return out
 
@@ -303,6 +306,7 @@ def fetch_youtube() -> list:
                 "url": e.get("link", ""),
                 "source": clean_text(e.get("source", "")) or "YouTube",
                 "publishedAt": parse_date(e.get("published", "")),
+                "image": e.get("thumbnail", ""),
                 "tier": "official" if is_official else "known",
                 "_kind": "youtube_official" if is_official else "youtube",
             })
@@ -414,6 +418,14 @@ def build():
     items.sort(key=lambda x: x["publishedAt"], reverse=True)
     items = items[:MAX_ITEMS]
 
+    # トップのヒーロー用に YouTube 公式サムネを最大12枚集める（重複除去）
+    hero_images = []
+    for it in items:
+        img = it.pop("image", "")
+        if it.get("type") == "youtube" and img and img not in hero_images:
+            hero_images.append(img)
+    hero_images = hero_images[:12]
+
     # 1件も取れなかったときは既存の feed.json を上書きしない（ネットワーク不調などへの保険）
     if not items and OUT_PATH.exists():
         print("collected 0 items; keeping existing feed.json")
@@ -423,6 +435,7 @@ def build():
         "artist": ARTIST,
         "updatedAt": dt.datetime.now(dt.timezone.utc).isoformat(),
         "count": len(items),
+        "heroImages": hero_images,
         "items": items,
     }
 
