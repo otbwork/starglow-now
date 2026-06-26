@@ -52,7 +52,7 @@ function cardHTML(item) {
     ? `<p class="summary">${escapeHtml(item.summary)}</p>` : '';
 
   return `
-    <a class="card tier-${tier}" href="${escapeHtml(item.url)}" target="_blank" rel="noopener">
+    <a class="card tier-${tier}" href="${escapeHtml(item.url)}" rel="noopener">
       <div class="card-top">
         <span class="badge ${tier}">${escapeHtml(c.tierLabel || tier)}</span>
         <span class="type-tag">${typeLabel}</span>
