@@ -11,6 +11,7 @@ let currentFilter = 'all';
 const TYPE_LABEL = {
   youtube: '🎬 YouTube',
   news: '📰 ニュース',
+  goods: '🛍 グッズ',
 };
 
 function timeAgo(iso) {
@@ -35,6 +36,7 @@ function matchesFilter(item) {
   switch (currentFilter) {
     case 'all': return true;
     case 'official': return tier === 'official';
+    case 'goods': return item.type === 'goods';
     case 'youtube': return item.type === 'youtube';
     case 'news': return item.type === 'news';
     case 'verified': return tier === 'official' || tier === 'major';

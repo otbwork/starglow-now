@@ -89,6 +89,15 @@ body {
 }
 .official-links a:active { background: rgba(138,123,255,.2); }
 
+/* グッズ販売ページへの CTA ボタン */
+.shop-cta {
+  display: block; margin-top: 12px; text-align: center; text-decoration: none;
+  font-size: 14px; font-weight: 800; letter-spacing: .04em; color: #0a0e1a;
+  background: var(--accent-grad); border-radius: 999px; padding: 11px 14px;
+  box-shadow: 0 0 16px rgba(138,123,255,.45), 0 0 30px rgba(84,230,255,.2);
+}
+.shop-cta:active { transform: scale(.985); }
+
 .filters { display: flex; gap: 8px; margin-top: 12px; overflow-x: auto; padding-bottom: 4px; }
 .chip {
   flex: 0 0 auto; font-size: 13px; color: var(--text-dim);

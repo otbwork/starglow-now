@@ -38,6 +38,12 @@ NEWS_QUERIES = [
 # 公式 YouTube ハンドル（channel_id は実行時に解決する）
 YOUTUBE_HANDLES = ["@starglow_bmsg", "@BMSG_official"]
 
+# 公式グッズ（BMSG SHOP の STARGLOW コレクション。Shopify の Atom フィードで新着取得）
+GOODS_ATOM = "https://bmsg.shop/collections/starglow.atom"
+GOODS_PAGE = "https://bmsg.shop/collections/starglow"
+# グッズはフィードに載せすぎないよう新着のみに絞る
+MAX_GOODS = 10
+
 # 出力先
 OUT_PATH = Path(__file__).resolve().parent.parent / "docs" / "data" / "feed.json"
 
@@ -303,6 +309,31 @@ def fetch_youtube() -> list:
     return items
 
 
+def fetch_goods() -> list:
+    """BMSG SHOP の STARGLOW コレクション（Shopify Atom）から新着グッズを取得。"""
+    items = []
+    try:
+        entries = parse_rss(http_get(GOODS_ATOM))
+    except Exception as ex:
+        print("goods fetch error:", ex)
+        return items
+    for e in entries[:MAX_GOODS]:
+        link = e.get("link", "")
+        if not link:
+            continue
+        items.append({
+            "type": "goods",
+            "title": clean_text(e.get("title", "")),
+            "summary": "",  # 商品ページで確認してもらうため説明は載せない（カードを簡潔に）
+            "url": link,
+            "source": "BMSG SHOP",
+            "publishedAt": parse_date(e.get("published", "")),
+            "tier": "official",
+            "_kind": "goods",
+        })
+    return items
+
+
 # ----------------------------------------------------------------------------
 # まとめ・整形
 # ----------------------------------------------------------------------------
@@ -350,13 +381,20 @@ def build():
         raw += fetch_youtube()
     except Exception as ex:
         print("youtube error:", ex)
+    try:
+        raw += fetch_goods()
+    except Exception as ex:
+        print("goods error:", ex)
 
     items = dedupe(raw)
 
-    # tier の確定（YouTube 公式判定を反映）
+    # tier の確定（YouTube 公式・グッズは公式扱い）
     for it in items:
         kind = it.pop("_kind", "news")
-        it["tier"] = classify_tier(it["url"], kind) if kind != "youtube_official" else "official"
+        if kind in ("youtube_official", "goods"):
+            it["tier"] = "official"
+        else:
+            it["tier"] = classify_tier(it["url"], kind)
 
     cross_reference(items)
 

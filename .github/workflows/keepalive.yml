@@ -1,0 +1,28 @@
+name: keepalive（定期実行の自動停止を防止）
+
+# GitHub はリポジトリに 60 日間まったく更新がないと schedule を自動停止する。
+# 10 日ごとに空コミットを積んで「活動あり」とみなさせ、自動更新を止めないための保険。
+on:
+  schedule:
+    # 毎正時は混雑するので 23 分。おおむね 10 日おき（1・11・21・31日）に実行
+    - cron: '23 5 1,11,21 * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: keepalive
+  cancel-in-progress: false
+
+jobs:
+  keepalive:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: 空コミットで活動を記録
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit --allow-empty -m "chore: keepalive（定期実行の自動停止を防止）"
+          git push
