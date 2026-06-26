@@ -96,14 +96,17 @@ body {
 }
 .official-links a:active { background: rgba(138,123,255,.2); }
 
-/* グッズ販売ページへの CTA ボタン */
+/* グッズ販売ページへの CTA ボタン（ダークテーマに馴染む控えめな配色） */
 .shop-cta {
-  display: block; margin-top: 12px; text-align: center; text-decoration: none;
-  font-size: 14px; font-weight: 800; letter-spacing: .04em; color: #0a0e1a;
-  background: var(--accent-grad); border-radius: 999px; padding: 11px 14px;
-  box-shadow: 0 0 16px rgba(138,123,255,.45), 0 0 30px rgba(84,230,255,.2);
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  margin-top: 10px; text-decoration: none;
+  font-size: 13px; font-weight: 700; letter-spacing: .02em;
+  color: var(--glow-gold);
+  background: rgba(255, 213, 122, 0.06);
+  border: 1px solid rgba(255, 213, 122, 0.38);
+  border-radius: 999px; padding: 10px 14px;
 }
-.shop-cta:active { transform: scale(.985); }
+.shop-cta:active { background: rgba(255, 213, 122, 0.14); }
 
 .filters { display: flex; gap: 8px; margin-top: 12px; overflow-x: auto; padding-bottom: 4px; }
 .chip {

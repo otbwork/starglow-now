@@ -1,6 +1,6 @@
 // STARGLOW NOW — Service Worker
 // アプリ本体はキャッシュ優先（オフラインでも起動）、データは常に最新を取りに行く。
-const CACHE = 'starglow-now-v2';
+const CACHE = 'starglow-now-v3';
 const SHELL = [
   './',
   './index.html',
