@@ -2,8 +2,9 @@ name: STARGLOW NOW - 収集とデプロイ
 
 on:
   # 3時間ごとに最新情報を収集（UTC）
+  # 毎正時(00分)はGitHub側が混雑して定期実行が取りこぼされやすいため、17分にずらす
   schedule:
-    - cron: '0 */3 * * *'
+    - cron: '17 */3 * * *'
   # 手動実行ボタン
   workflow_dispatch:
   # フロントを変更したら即デプロイ
