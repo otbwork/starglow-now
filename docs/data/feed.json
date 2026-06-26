@@ -1,0 +1,48 @@
+{
+  "artist": "STARGLOW",
+  "updatedAt": "2026-06-26T00:00:00+00:00",
+  "count": 4,
+  "sample": true,
+  "items": [
+    {
+      "type": "youtube",
+      "title": "STARGLOW - 'Moonchaser' Music Video",
+      "summary": "BMSG第3のボーイズグループ STARGLOW のプレデビューシングル「Moonchaser」MV。",
+      "url": "https://www.youtube.com/@starglow_bmsg",
+      "source": "STARGLOW Official",
+      "publishedAt": "2026-06-24T10:00:00+00:00",
+      "id": "sample0001yt",
+      "credibility": { "score": 95, "tier": "official", "tierLabel": "公式", "warning": null }
+    },
+    {
+      "type": "news",
+      "title": "STARGLOW、初の単独ライブ開催が決定",
+      "summary": "BMSGのSTARGLOWが初の単独公演を発表。チケット情報の詳細は公式サイトにて。",
+      "url": "https://www.oricon.co.jp/",
+      "source": "ORICON NEWS",
+      "publishedAt": "2026-06-23T09:00:00+00:00",
+      "id": "sample0002nw",
+      "credibility": { "score": 84, "tier": "major", "tierLabel": "大手メディア", "warning": null }
+    },
+    {
+      "type": "news",
+      "title": "STARGLOWプレデビューシングル「Moonchaser」配信スタート",
+      "summary": "9月22日より各種音楽配信サービスにて配信開始。",
+      "url": "https://www.billboard-japan.com/",
+      "source": "Billboard JAPAN",
+      "publishedAt": "2026-06-22T08:00:00+00:00",
+      "id": "sample0003nw",
+      "credibility": { "score": 80, "tier": "major", "tierLabel": "大手メディア", "warning": null }
+    },
+    {
+      "type": "news",
+      "title": "【噂】STARGLOWメンバーに関する未確認情報が拡散",
+      "summary": "SNS上で出どころ不明の情報が出回っているという憶測。公式の発表はない。",
+      "url": "https://example.com/rumor",
+      "source": "matomeblog",
+      "publishedAt": "2026-06-21T12:00:00+00:00",
+      "id": "sample0004rm",
+      "credibility": { "score": 15, "tier": "unknown", "tierLabel": "未確認", "warning": "公式・大手による裏取りが取れていない情報です" }
+    }
+  ]
+}

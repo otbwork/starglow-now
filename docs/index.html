@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>STARGLOW NOW — 最新情報まとめ</title>
+  <meta name="description" content="STARGLOW（BMSG）の最新情報を、信頼度つきで自動集約。公式・ニュース・YouTubeをワンタッチでチェック。" />
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.webmanifest" />
+  <meta name="theme-color" content="#070b16" />
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="STARGLOW NOW" />
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="starfield" aria-hidden="true"></div>
+
+  <header class="app-header">
+    <div class="header-inner">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <div class="brand-text">
+          <h1>STARGLOW <span>NOW</span></h1>
+          <p class="tagline">最新情報を自動集約</p>
+        </div>
+      </div>
+      <button id="refreshBtn" class="icon-btn" title="更新" aria-label="更新">⟳</button>
+    </div>
+
+    <nav class="official-links" aria-label="公式リンク">
+      <a href="https://starglow.tokyo/" target="_blank" rel="noopener">公式サイト</a>
+      <a href="https://www.youtube.com/@starglow_bmsg" target="_blank" rel="noopener">YouTube</a>
+      <a href="https://www.instagram.com/starglow_bmsg/" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://x.com/starglow_bmsg" target="_blank" rel="noopener">X</a>
+    </nav>
+
+    <div class="filters" id="filters">
+      <button class="chip is-active" data-filter="all">すべて</button>
+      <button class="chip" data-filter="official">公式</button>
+      <button class="chip" data-filter="youtube">YouTube</button>
+      <button class="chip" data-filter="news">ニュース</button>
+      <button class="chip" data-filter="verified">確実な情報のみ</button>
+    </div>
+  </header>
+
+  <main id="feed" class="feed" aria-live="polite">
+    <div class="state" id="loading">読み込み中…</div>
+  </main>
+
+  <footer class="app-footer">
+    <p id="updatedAt"></p>
+    <p class="disclaimer">信頼度は情報源の種類などから自動判定した目安です。最終確認は公式情報をご覧ください。</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
