@@ -1,6 +1,7 @@
 // STARGLOW NOW — Service Worker
-// アプリ本体はキャッシュ優先（オフラインでも起動）、データは常に最新を取りに行く。
-const CACHE = 'starglow-now-v3';
+// オンライン時は常に最新を取りに行き、オフライン時だけキャッシュを使う方針。
+// （以前は cache-first で、更新してもアプリ側に反映されにくかったため改良）
+const CACHE = 'starglow-now-v4';
 const SHELL = [
   './',
   './index.html',
@@ -23,23 +24,19 @@ self.addEventListener('activate', (e) => {
   );
 });
 
+// ネットワーク優先：取得できたら最新を返しつつキャッシュ更新、ダメならキャッシュ
+function networkFirst(request) {
+  return fetch(request)
+    .then((res) => {
+      const copy = res.clone();
+      caches.open(CACHE).then((c) => c.put(request, copy));
+      return res;
+    })
+    .catch(() => caches.match(request));
+}
+
 self.addEventListener('fetch', (e) => {
-  const url = new URL(e.request.url);
-
-  // フィードデータは network-first（最新優先、失敗時はキャッシュ）
-  if (url.pathname.endsWith('/data/feed.json') || url.pathname.endsWith('feed.json')) {
-    e.respondWith(
-      fetch(e.request)
-        .then((res) => {
-          const copy = res.clone();
-          caches.open(CACHE).then((c) => c.put(e.request, copy));
-          return res;
-        })
-        .catch(() => caches.match(e.request))
-    );
-    return;
-  }
-
-  // それ以外（アプリ本体）は cache-first
-  e.respondWith(caches.match(e.request).then((hit) => hit || fetch(e.request)));
+  if (e.request.method !== 'GET') return;
+  // 画面・本体・データすべてオンライン時は最新優先（更新が確実に反映される）
+  e.respondWith(networkFirst(e.request));
 });
