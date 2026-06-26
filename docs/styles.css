@@ -66,6 +66,12 @@ body {
 }
 .brand-text h1 {
   margin: 0; font-size: 20px; letter-spacing: .14em; font-weight: 800;
+  display: flex; align-items: center; gap: 8px;
+}
+/* 公式ロゴ画像（白文字＋黒背景のため screen 合成で黒を透過させて白ロゴだけ出す） */
+.wordmark img {
+  height: 18px; width: auto; display: block;
+  mix-blend-mode: screen;
 }
 .brand-text h1 span {
   background: var(--accent-grad); -webkit-background-clip: text; background-clip: text;
