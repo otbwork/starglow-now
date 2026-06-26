@@ -44,14 +44,13 @@ body {
 }
 @keyframes twinkle { from { opacity: .35; } to { opacity: .7; } }
 
-/* ---- トップの文字ロゴ（大きく配置） ---- */
+/* ---- トップの文字ロゴ（公式サイトのように大きく・背景透過） ---- */
 .hero {
   display: flex; align-items: center; justify-content: center;
-  width: 100%; padding: 30px 20px 22px;
+  width: 100%; padding: 30px 12px 22px;
 }
 .hero-logo {
-  width: min(82%, 460px); height: auto; display: block;
-  mix-blend-mode: screen;   /* 黒背景を透過させて白ロゴだけ出す */
+  width: 100%; max-width: 640px; height: auto; display: block;
 }
 
 /* ---- ヘッダー ---- */
