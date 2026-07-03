@@ -3,6 +3,24 @@
   "updatedAt": "2026-06-26T00:00:00+00:00",
   "count": 4,
   "sample": true,
+  "events": [
+    {
+      "date": "2026-07-22",
+      "kind": "release",
+      "kindLabel": "リリース",
+      "title": "（サンプル）3rdシングル「Drivin' My Life」リリース",
+      "url": "https://starglow.tokyo/",
+      "source": "STARGLOW公式"
+    },
+    {
+      "date": "2026-07-29",
+      "kind": "release",
+      "kindLabel": "リリース",
+      "title": "（サンプル）ライブBD/DVD「Wish upon a star」発売",
+      "url": "https://starglow.tokyo/",
+      "source": "STARGLOW公式"
+    }
+  ],
   "items": [
     {
       "type": "youtube",

@@ -277,6 +277,12 @@ def resolve_channel_id(handle: str) -> str | None:
         return None
 
 
+def youtube_thumbnail(url: str) -> str | None:
+    """動画URLからサムネイル画像URLを組み立てる（カード表示用）。"""
+    m = re.search(r"[?&]v=([\w-]{6,})", url)
+    return f"https://i.ytimg.com/vi/{m.group(1)}/hqdefault.jpg" if m else None
+
+
 def fetch_youtube() -> list:
     items = []
     for handle in YOUTUBE_HANDLES:
@@ -296,16 +302,20 @@ def fetch_youtube() -> list:
             # BMSG 公式は他グループも扱うので STARGLOW 関連だけに絞る
             if handle == "@BMSG_official" and "STARGLOW" not in title.upper():
                 continue
+            link = e.get("link", "")
             items.append({
                 "type": "youtube",
                 "title": title,
                 "summary": clean_text(e.get("summary", ""))[:200],
-                "url": e.get("link", ""),
+                "url": link,
+                "thumbnail": youtube_thumbnail(link),
                 "source": clean_text(e.get("source", "")) or "YouTube",
                 "publishedAt": parse_date(e.get("published", "")),
                 "tier": "official" if is_official else "known",
                 "_kind": "youtube_official" if is_official else "youtube",
             })
+            if not items[-1]["thumbnail"]:
+                items[-1].pop("thumbnail")
     return items
 
 
@@ -371,6 +381,88 @@ def cross_reference(items: list) -> None:
         a["corroborations"] = corroborations
 
 
+# ----------------------------------------------------------------------------
+# ライブ・リリース予定の自動抽出（公式・大手メディアの記事のみを対象に精度重視）
+# ----------------------------------------------------------------------------
+
+EVENT_KINDS = [
+    ("live",    "ライブ",   ("ライブ", "ツアー", "公演", "コンサート", "LIVE", "TOUR", "ファンミ", "フェス")),
+    ("release", "リリース", ("リリース", "発売", "配信", "シングル", "アルバム", "ミュージックビデオ", "MV公開", "主題歌", "先行配信")),
+    ("media",   "メディア", ("放送", "出演", "オンエア", "生出演", "番組", "OA")),
+    ("event",   "イベント", ("イベント", "発表会", "特典会", "リリイベ", "サイン会", "お渡し会")),
+]
+
+# 「7月22日」「2026年7月22日」に加え「7/22」「2026/7/22」形式も拾う
+# （「22日間」「3日連続」のような期間表現、URLや分数っぽい並びは除外）
+DATE_RE = [
+    re.compile(r"(?:(20\d{2})年)?(\d{1,2})月(\d{1,2})日(?!間|連続)"),
+    re.compile(r"(?<![\d/])(?:(20\d{2})/)?(\d{1,2})/(\d{1,2})(?![\d/])"),
+]
+
+
+def parse_event_date(text: str, today):
+    """テキストから最初に見つかった妥当な日付を返す（見つからなければ None）。"""
+    for pat in DATE_RE:
+        for m in pat.finditer(text):
+            y, mo, d = m.groups()
+            try:
+                if y:
+                    date = dt.date(int(y), int(mo), int(d))
+                else:
+                    date = dt.date(today.year, int(mo), int(d))
+                    # 年の記載がなく大きく過去なら来年の予定とみなす
+                    if (today - date).days > 45:
+                        date = dt.date(today.year + 1, int(mo), int(d))
+            except ValueError:
+                continue
+            if today - dt.timedelta(days=1) <= date <= today + dt.timedelta(days=400):
+                return date
+    return None
+
+
+def detect_event_kind(text: str):
+    low = text.lower()
+    for kind, label, words in EVENT_KINDS:
+        if any(w.lower() in low for w in words):
+            return kind, label
+    return None, None
+
+
+def extract_events(items: list) -> list:
+    """信頼できる記事から「日付つき予定」を抽出してカレンダー用に返す。"""
+    today = dt.date.today()
+    events = {}
+    for it in items:
+        tier = it.get("credibility", {}).get("tier")
+        if tier not in ("official", "major", "known"):
+            continue  # 未確認ソースの日付は載せない（精度優先）
+        text = f"{it.get('title', '')} {it.get('summary', '')}"
+        kind, label = detect_event_kind(text)
+        if not kind:
+            continue
+        # 1記事につき最初の日付のみ（期間表現などの誤抽出を抑える）
+        date = parse_event_date(text, today)
+        if not date:
+            continue
+        ev = {
+            "date": date.isoformat(),
+            "kind": kind,
+            "kindLabel": label,
+            "title": it["title"][:90],
+            "url": it["url"],
+            "source": it.get("source", ""),
+            "_score": it["credibility"]["score"],
+        }
+        key = (ev["date"], kind)
+        # 同じ日・同種のイベントは信頼度の高い記事を代表にする
+        if key not in events or ev["_score"] > events[key]["_score"]:
+            events[key] = ev
+    out = sorted(events.values(), key=lambda e: e["date"])[:12]
+    for e in out:
+        e.pop("_score", None)
+    return out
+
+
 def build():
     raw = []
     try:
@@ -419,10 +511,14 @@ def build():
         print("collected 0 items; keeping existing feed.json")
         return
 
+    events = extract_events(items)
+    print(f"extracted {len(events)} schedule events")
+
     payload = {
         "artist": ARTIST,
         "updatedAt": dt.datetime.now(dt.timezone.utc).isoformat(),
         "count": len(items),
+        "events": events,
         "items": items,
     }
 

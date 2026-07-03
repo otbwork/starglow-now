@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>STARGLOW NOW — 最新情報まとめ</title>
-  <meta name="description" content="STARGLOW（BMSG）の最新情報を、信頼度つきで自動集約。公式・ニュース・YouTubeをワンタッチでチェック。" />
+  <meta name="description" content="STARGLOW（BMSG）の最新情報を、信頼度つきで自動集約。公式・ニュース・YouTube・グッズをワンタッチでチェック。" />
 
   <!-- PWA -->
   <link rel="manifest" href="manifest.webmanifest" />
@@ -18,6 +18,11 @@
 </head>
 <body>
   <div class="starfield" aria-hidden="true"></div>
+
+  <!-- 起動スプラッシュ（トップ画像を画面いっぱいに表示してからフェードアウト） -->
+  <div id="splash" class="splash" aria-hidden="true">
+    <img class="splash-logo" src="img/starglow-logo.png" alt="STARGLOW" />
+  </div>
 
   <div class="hero">
     <img class="hero-logo" src="img/starglow-logo.png" alt="STARGLOW" />
@@ -45,6 +50,22 @@
     <a class="shop-cta" href="https://bmsg.shop/collections/starglow" rel="noopener">
       🛍 STARGLOW グッズを見る（BMSG SHOP）
     </a>
+  </header>
+
+  <section class="controls">
+    <div class="upcoming" id="upcoming" aria-label="誕生日・記念日カウントダウン"></div>
+
+    <div id="schedule-sec" style="display:none">
+      <h2 class="section-title">SCHEDULE</h2>
+      <div class="schedule" id="schedule" aria-label="ライブ・リリース予定"></div>
+      <p class="schedule-note">ニュース記事から自動抽出した予定です。正式な日程は必ず公式サイトでご確認ください。</p>
+    </div>
+
+    <h2 class="section-title">NEWS</h2>
+    <div class="member-note" id="memberNote" style="display:none"></div>
+
+    <input id="searchBox" class="search" type="search"
+           placeholder="キーワードで検索（曲名・メンバー名など）" aria-label="キーワード検索" />
 
     <div class="filters" id="filters">
       <button class="chip is-active" data-filter="all">すべて</button>
@@ -53,12 +74,18 @@
       <button class="chip" data-filter="youtube">YouTube</button>
       <button class="chip" data-filter="news">ニュース</button>
       <button class="chip" data-filter="verified">確実な情報のみ</button>
+      <button class="chip" data-filter="fav">♡ お気に入り</button>
     </div>
-  </header>
+  </section>
 
   <main id="feed" class="feed" aria-live="polite">
     <div class="state" id="loading">読み込み中…</div>
   </main>
+
+  <section class="members-sec">
+    <h2 class="section-title">MEMBER</h2>
+    <div class="members" id="members" aria-label="メンバー一覧"></div>
+  </section>
 
   <footer class="app-footer">
     <img class="footer-logo" src="img/starglow-logo.png" alt="STARGLOW" />
